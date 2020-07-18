@@ -131,6 +131,48 @@ sudo systemctl reload nginx.service
 
 <<Now follow install composer and return>>
 
+#Install Flarum#
+
+Create a document root directory.
+
+
+sudo mkdir -p /var/www/flarum
+
+
+Change ownership of the /var/www/flarum directory to johndoe.
+
+
+sudo chown -R johndoe:johndoe /var/www/flarum
+
+
+#Navigate to the document root folder.
+
+
+cd /var/www/flarum
+
+
+#Download the latest release of Flarum via composer.
+
+
+sudo composer create-project flarum/flarum . --stability=beta
+
+
+
+sudo ./vendor/bin/upgrade-carbon
+
+
+
+
+NOTE: You may run out of memory when installing Flarum via Composer. If that happens, then you'll need to setup Swap.
+
+
+#Change ownership of the /var/www/flarum directory to www-data.
+
+
+
+sudo chown -R www-data:www-data /var/www/flarum
+
+
 
 
 
