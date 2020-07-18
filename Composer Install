@@ -1,0 +1,32 @@
+sudo apt install curl php-cli php-mbstring git unzip
+
+
+
+curl -sS https://getcomposer.org/installer -o composer-setup.php
+
+
+
+Next, verify that the installer matches the SHA-384 hash for the latest installer found on the Composer Public Keys / Signatures page. Copy the hash from that page and store it as a shell variable:
+
+
+https://composer.github.io/pubkeys.html
+
+
+HASH=544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061
+
+Make sure that you substitute the latest hash for the HASH= value.
+
+
+php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+
+
+Installer verified
+
+
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+
+Confirm version
+
+
+composer
