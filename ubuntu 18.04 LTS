@@ -1,0 +1,136 @@
+#Check the Ubuntu version.
+
+lsb_release -ds
+
+
+# Ubuntu 18.04.2 LTS
+
+Create a new non-root user account with sudo access and switch to it.
+
+
+adduser johndoe --gecos "John Doe"
+
+usermod -aG sudo johndoe
+
+su - johndoe
+
+
+#NOTE: Replace johndoe with your username.
+
+#Set up the timezone.
+
+
+sudo dpkg-reconfigure tzdata
+
+
+#Ensure that your system is up to date.
+
+sudo apt update && sudo apt upgrade -y
+
+
+#Install the needed packages.
+
+sudo apt install -y zip unzip curl wget git
+
+
+#Install PHP
+#Install PHP, as well as the necessary PHP extensions.
+
+sudo apt install -y php7.2 php7.2-cli php7.2-fpm php7.2-common php7.2-mbstring php7.2-gd php7.2-xml php7.2-mysql php7.2-curl
+
+Check the version.
+
+php --version
+
+# PHP 7.2.19-0ubuntu0.18.04.1 (cli) (built: Jun  4 2019 14:48:12) ( NTS )
+# Copyright (c) 1997-2018 The PHP Group
+# Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+#     with Zend OPcache v7.2.10-0ubuntu0.18.04.1, Copyright (c) 1999-2018, by Zend Technologies
+
+Install MySQL.
+
+sudo apt install -y mysql-server
+
+
+#Check the version.
+
+mysql --version
+
+# mysql  Ver 14.14 Distrib 5.7.27, for Linux (x86_64) using  EditLine wrapper
+#Run the mysql_secure_installation script to improve the security of your MySQL installation.
+
+sudo mysql_secure_installation
+
+
+Log into MySQL as the root user.
+
+sudo mysql -u root -p
+
+# Enter password:
+#Create a new MySQL database and database user, and remember the credentials.
+
+mysql> CREATE DATABASE dbname;
+mysql> GRANT ALL ON dbname.* TO 'username' IDENTIFIED BY 'password';
+mysql> FLUSH PRIVILEGES;
+mysql> quit
+
+#NOTE: Replace dbname and username with appropriate names for your setup. Replace password with a strong password.
+
+Install Nginx.
+
+sudo apt install -y nginx
+
+#Check the version.
+
+sudo nginx -v
+
+
+# nginx version: nginx/1.14.0 (Ubuntu)
+
+
+#Configure Nginx for Flarum. Run sudo vim /etc/nginx/sites-available/flarum.conf and populate the file with the following configuration.
+
+server {
+
+  listen [::]:80;
+  listen 80;
+
+  server_name example.com;                                #replace with own domain name#
+  root /var/www/flarum/public;
+
+  index index.php;
+
+  location / {
+    try_files $uri $uri/ /index.php?$query_string;
+  }
+
+  location ~* \.php$ {
+    fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+    include fastcgi_params;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  }
+
+}
+
+
+Save the file and exit with :+W+Q.
+
+#Activate the new flarum.conf configuration by linking the file to the sites-enabled directory.
+
+sudo ln -s /etc/nginx/sites-available/flarum.conf /etc/nginx/sites-enabled/
+
+
+Test the configuration.
+
+sudo nginx -t
+
+Reload Nginx.
+
+sudo systemctl reload nginx.service
+
+<<Now follow install composer and return>>
+
+
+
+
